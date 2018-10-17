@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	  
+	<ui:composition template="_template.xhtml">
+	
+	<ui:define name="title">Pessoa Jurídica</ui:define>
+	<ui:define name="titulo">Pessoa Jurídica</ui:define>
+	
+	<!-- 
+		private String nome;
+
+		private String fone;
+		private String email;
+	
+		private String endereço;
+		private String bairro;
+		private String cidade;
+		private String cep;
+	
+		@Column(unique=true)
+		private String login;
+		private String senha;
+	 -->
+	  
+	  <ui:define name="content">
+	  <h:messages class="alert alert-danger"/>
+	  	  <div class="panel panel-default">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Cadastrar</h3>
+		  </div>
+		  <div class="panel-body">
+	  	<h:form>
+
+
+	  		<div class="col-md-6">
+	  			<div class="form-group">		
+	  				<label>Nome</label>
+	  				<h:inputText id="nome" value="#{pessoaJuridicaController.pessoaJuridica.nome}" required="true" requiredMessage="Nome obrigatório."  class="form-control"/>
+	  			</div>
+	  				
+	  			<div class="form-group">	
+	  				<label>Grupo</label>
+					<h:selectOneMenu id="grupo" value="#{pessoaJuridicaController.idGrupo}" required="true" requiredMessage="Grupo obrigatório."  class="form-control">
+						<f:selectItem itemLabel="Selecione um grupo" noSelectionOption="true"/>
+						<f:selectItems value="#{pessoaJuridicaController.grupos}" var="grupo" itemLabel="#{grupo.nome}" itemValue="#{grupo.id}"/>
+					</h:selectOneMenu>
+				</div>
+	  					
+	  			<div class="form-group">
+	  				<label>Fone</label>
+	  				<p:inputMask id="fone" value="#{pessoaJuridicaController.pessoaJuridica.fone}" mask="(99) 9999-9999" class="form-control"/>
+	  			</div>
+	  				
+	  			<div class="form-group">
+	  				<label>Email</label>
+	  				<h:inputText id="email" value="#{pessoaJuridicaController.pessoaJuridica.email}"  class="form-control">
+	  					<f:passThroughAttribute name="type" value="email"/>
+	  				</h:inputText>
+	  			</div>
+	  			<div class="form-group">
+					<label>Endereço</label>
+	  				<h:inputText id="endereco" value="#{pessoaJuridicaController.pessoaJuridica.endereco}" required="true" requiredMessage="Endereço obrigatório."  class="form-control"/>
+	  			</div>
+	  				
+	  			<div class="form-group">
+	  				<label>Bairro</label>
+	  				<h:inputText id="bairro" value="#{pessoaJuridicaController.pessoaJuridica.bairro}" required="true" requiredMessage="Bairro obrigatório."  class="form-control"/>
+	  			</div>
+	  		</div>
+	  		
+	  			
+	  		<div class="col-md-6">	
+	  			
+	  				
+	  			<div class="form-group">
+	  				<label>Cidade</label>
+	  				<h:inputText id="cidade" value="#{pessoaJuridicaController.pessoaJuridica.cidade}"  required="true" requiredMessage="Cidade obrigatória."  class="form-control"/>
+	  			</div>
+	  				
+	  			<div class="form-group">
+	  				<label>CEP</label>
+	  				<p:inputMask id="cep" value="#{pessoaJuridicaController.pessoaJuridica.cep}" mask="99.999-999" required="true" requiredMessage="CEP obrigatório."  class="form-control"/>
+	  			</div>
+	  				
+	  			<div class="form-group">
+	  				<label>IE</label>
+	  				<h:inputText id="ie" value="#{pessoaJuridicaController.pessoaJuridica.ie}"  required="true" requiredMessage="Inscrição estadual obrigatória."  class="form-control"/>
+	  			</div>
+	  				
+	  			<div class="form-group">
+	  				<label>CNPJ</label>
+	  				<h:inputText id="cnpj" value="#{pessoaJuridicaController.pessoaJuridica.cnpj}"  required="true" requiredMessage="CNPJ obrigatório."  class="form-control"/>
+	  			</div>
+	  				
+	  			<div class="form-group">
+	  				<label>Login</label>
+	  				<h:inputText id="login" value="#{pessoaJuridicaController.pessoaJuridica.login}"  required="true" requiredMessage="Login obrigatório."  class="form-control"/>
+	  			</div>
+	  				
+	  			<div class="form-group">
+	  				<label>Senha</label>
+	  				<h:inputText id="senha" value="#{pessoaJuridicaController.pessoaJuridica.senha}"  required="true" requiredMessage="Senha obrigatório."  class="form-control">
+						<f:passThroughAttribute name="type" value="password"/>
+					</h:inputText>
+				</div>
+			</div>
+	  				
+	  			<div align="right">
+	  				<h:commandButton value="Gravar" action="#{pessoaJuridicaController.gravar(pessoaJuridicaController.pessoaJuridica)}" class="btn btn-success"/>
+	  			</div>
+	  				
+
+	  	</h:form>
+	  	</div>
+	  	</div>
+	  	
+	  	<div class="panel panel-default">
+  		<div class="panel-body">
+	  	<h:form id="formTabelaPessoasJuridicas">
+	  		<h:dataTable id="tabelaPessoasJuridicas" value="#{pessoaJuridicaController.pessoasJuridicas}" var="pessoa" class="table table-hover">
+				<h:column>
+					<f:facet name="header">Nome</f:facet>
+					<h:outputText value="#{pessoa.nome}"/>
+				</h:column>
+				
+				<h:column>
+					<f:facet name="header">Grupo</f:facet>
+					<h:outputText value="#{pessoa.grupo.nome}"/>
+				</h:column>
+				
+				<h:column>
+					<f:facet name="header">Fone</f:facet>
+					<h:outputText value="#{pessoa.fone}"/>
+				</h:column>	
+					  	
+				<h:column>
+					<f:facet name="header">Email</f:facet>
+					<h:outputText value="#{pessoa.email}"/>
+				</h:column>
+				
+				<h:column>
+					<f:facet name="header">Endereço</f:facet>
+					<h:outputText value="#{pessoa.endereco}"/>
+				</h:column>	
+				
+				<h:column>
+					<f:facet name="header">Bairro</f:facet>
+					<h:outputText value="#{pessoa.bairro}"/>
+				</h:column>	
+				
+				<h:column>
+					<f:facet name="header">Cidade</f:facet>
+					<h:outputText value="#{pessoa.cidade}"/>
+				</h:column>	
+				
+				<h:column>
+					<f:facet name="header">CEP</f:facet>
+					<h:outputText value="#{pessoa.cep}"/>
+				</h:column>	
+				
+				<h:column>
+					<f:facet name="header">IE</f:facet>
+					<h:outputText value="#{pessoa.ie}"/>
+				</h:column>	
+				
+				<h:column>
+					<f:facet name="header">CNPJ</f:facet>
+					<h:outputText value="#{pessoa.cnpj}"/>
+				</h:column>	
+				
+				<h:column>
+					<f:facet name="header">Login</f:facet>
+					<h:outputText value="#{pessoa.login}"/>
+				</h:column>	
+
+				<!--<h:column>-->
+					<!--<f:facet name="header">Senha</f:facet>-->
+					<!--<h:outputText value="#{pessoa.senha}"/>-->
+				<!--</h:column>	-->
+				
+				<h:column>
+					<f:facet name="header">Atualizar</f:facet>
+					<h:commandLink value="Atualizar" action="#{pessoaJuridicaController.carregar(pessoa)}" class="btn btn-warning"/>
+				</h:column>
+				
+				<h:column>
+					<f:facet name="header">Remover</f:facet>
+					<h:commandLink value="Remover" action="#{pessoaJuridicaController.remover(pessoa)}" class="btn btn-danger"/>
+				</h:column>
+					  			
+	  		</h:dataTable>
+	  	</h:form>
+	  	</div>
+	  	</div>
+	  	
+	  	</ui:define>
+	  </ui:composition>
+</html>

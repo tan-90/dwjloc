@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+>
+
+<ui:composition template="_template.xhtml">
+
+    <ui:define name="title">Funcionalidades por grupo</ui:define>
+    <ui:define name="titulo">Funcionalidades por grupo</ui:define>
+
+    <ui:define name="content">
+    <h:messages class="alert alert-danger"/>
+        <h:form class="form-inline">
+            
+          <div class="panel panel-success">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Grupo</h3>
+		  </div>
+		  <div class="panel-body">
+		 	<div class="form-group">
+                <h:selectOneMenu id="grupo" value="#{grupoFuncionalidadesController.idGrupo}" class="form-control">
+                    <f:selectItem itemLabel="Selecione um grupo" noSelectionOption="true"/>
+                    <f:selectItems
+                            value="#{grupoController.grupos}"
+                            var="grupo"
+                            itemLabel="#{grupo.nome}"
+                            itemValue="#{grupo.id}"
+                    />
+                    <f:ajax event="change" execute="btnRemove btnAdd funcionalidade tabelaFuncionalidades" render="btnRemove btnAdd funcionalidade tabelaFuncionalidades"/>
+                </h:selectOneMenu>
+              </div>
+            </div>
+            </div>
+            
+            
+           <div class="panel panel-success">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Nova Funcionalidade</h3>
+		  </div>
+		  <div class="panel-body">
+		  		<div class="form-group">
+                    <h:selectOneMenu id="funcionalidade" value="#{grupoFuncionalidadesController.idFuncionalidade}" class="form-control">
+                        <f:selectItem itemLabel="Selecione uma funcionalidade" noSelectionOption="true"/>
+                        <f:selectItems
+                                value="#{grupoFuncionalidadesController.getMissingFuncionalidades(grupoFuncionalidadesController.idGrupo)}"
+                                var="funcionalidade"
+                                itemLabel="#{funcionalidade.nome}"
+                                itemValue="#{funcionalidade.id}"
+                        />
+                    </h:selectOneMenu>
+                 </div>
+
+                    <h:commandButton id="btnAdd" disabled="#{!grupoController.isNotConstant(grupoFuncionalidadesController.idGrupo)}" action="#{grupoFuncionalidadesController.adicionarFuncionalidade}" value="Adicionar" class="btn btn-success"/>
+                </div>
+                </div>
+
+            <div class="panel panel-info">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Funcionalidades</h3>
+		  </div>
+		  <div class="panel-body">
+
+                <h:dataTable id="tabelaFuncionalidades" value="#{grupoFuncionalidadesController.grupoFuncionalidades}" var="funcionalidade" class="table table-hover">
+                    <h:column>
+                        <f:facet name="header">Nome</f:facet>
+                        <h:outputText value="#{funcionalidade.nome}"/>
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Remover</f:facet>
+                        <h:commandLink id="btnRemove" disabled="#{!grupoController.isNotConstant(grupoFuncionalidadesController.idGrupo)}" value="Remover" action="#{grupoFuncionalidadesController.remover(funcionalidade)}" class="btn btn-danger#{grupoFuncionalidadesController.removeDisabled(grupoFuncionalidadesController.idGrupo)}"/>
+                    </h:column>
+                </h:dataTable>
+            </div>
+            </div>
+            
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+</html>

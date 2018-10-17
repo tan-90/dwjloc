@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+>
+
+<ui:composition template="_template.xhtml">
+
+    <ui:define name="title">Locação</ui:define>
+    <ui:define name="titulo">Locação</ui:define>
+
+    <ui:define name="content">
+    <h:messages class="alert alert-danger"/>
+        <h:form class="form-inline">
+            
+          <div class="panel panel-success">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Cliente</h3>
+		  </div>
+		  <div class="panel-body">
+		  	<div class="form-group">
+				<label>Escolha um cliente: </label>
+                <h:selectOneMenu id="cliente" value="#{aluguelController.idCliente}" class="form-control">
+                    <f:selectItem itemLabel="Selecione um cliente" noSelectionOption="true"/>
+                    <f:selectItems
+                            value="#{usuarioController.usuarios}"
+                            var="cliente"
+                            itemLabel="#{cliente.nome}"
+                            itemValue="#{cliente.id}"
+                    />
+                    <f:ajax event="change" execute="tabelaPendencias tabelaHistorico" render="tabelaPendencias tabelaHistorico"/>
+                </h:selectOneMenu>
+               </div>
+          </div>
+
+		
+		<div class="panel panel-success">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Nova locação</h3>
+		  </div>
+		  <div class="panel-body">
+				<div class="form-group">
+                    <h:selectOneMenu id="tipo" value="#{aluguelController.idTipo}" class="form-control">
+                        <f:selectItem itemLabel="Selecione um tipo" noSelectionOption="true"/>
+                        <f:selectItems
+                                value="#{tipoFerramentaController.tiposFerramentas}"
+                                var="tipo"
+                                itemLabel="#{tipo.nome}"
+                                itemValue="#{tipo.id}"
+                        />
+                        <f:ajax event="change" execute="quantidade" render="quantidade"/>
+                    </h:selectOneMenu>
+                  </div>
+
+				<div class="form-group">
+                    <h:selectOneMenu id="quantidade" value="#{aluguelController.quantidade}" class="form-control">
+                        <f:selectItem itemLabel="Selecione uma quantidade" noSelectionOption="true"/>
+                        <f:selectItems
+                                value="#{aluguelController.quantidadeDisponivel}"
+                                var="quantidade"
+                                itemLabel="#{quantidade}"
+                                itemValue="#{quantidade}"
+                        />
+                    </h:selectOneMenu>
+                  </div>
+
+				<div class="form-group">
+                    <h:inputText id="dataLocacao" value="#{aluguelController.dataLocacao.time}"  required="true" requiredMessage="Data obrigatório." class="form-control">
+                        <f:convertDateTime pattern="yyyy-MM-dd" timeZone="America/Sao_Paulo"/>
+                        <f:passThroughAttribute name="type" value="date"/>
+                    </h:inputText>
+                </div>
+
+				<div class="form-group">
+                    <h:inputText id="dataDevolucao" value="#{aluguelController.dataDevolucao.time}"  required="true" requiredMessage="Prazo obrigatório." class="form-control">
+                        <f:convertDateTime pattern="yyyy-MM-dd" timeZone="America/Sao_Paulo"/>
+                        <f:passThroughAttribute name="type" value="date"/>
+                    </h:inputText>
+                </div>
+                
+                	<div class="form-group">
+                    	<h:commandButton value="Locar" action="#{aluguelController.adicionarLocacao}" class="btn btn-success"/>
+                    </div>
+                    
+                </div>
+              </div>
+            </div>
+
+
+           <div class="panel panel-danger">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Pendências</h3>
+		  </div>
+		  <div class="panel-body">
+                    <h:dataTable id="tabelaPendencias" value="#{aluguelController.pendencias}" var="locacao" class="table table-hover">
+                        <h:column>
+                            <f:facet name="header">Tipo</f:facet>
+                            <h:outputText value="#{locacao.ferramenta.tipo.nome}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Codigo</f:facet>
+                            <h:outputText value="#{locacao.ferramenta.codigo}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Valor diário</f:facet>
+                            <h:outputText value="#{locacao.ferramenta.precoAluguel}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Locação</f:facet>
+                            <h:outputText value="#{locacao.dataLocacao.time}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"/>
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Prazo</f:facet>
+                            <h:outputText value="#{locacao.prazoDevolucao.time}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"/>
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Acréscimo</f:facet>
+                            <h:outputText id="acrescimo" value="#{aluguelController.getAcrescimo(locacao)}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Desconto</f:facet>
+                            <h:outputText value="#{aluguelController.getDesconto(locacao)}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Valor total</f:facet>
+                            <h:outputText id="total" value="#{aluguelController.getValorTotal(locacao)}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Danificado</f:facet>
+                            <h:selectBooleanCheckbox rendered="#{!aluguelController.getEntregueState(locacao)}" value="#{locacao.multa}">
+                                <f:ajax event="click" listener="#{aluguelController.flipMulta(locacao)}" execute="acrescimo total" render="acrescimo total"/>
+                            </h:selectBooleanCheckbox>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Entregue</f:facet>
+                            <h:commandButton immediate="true" action="#{aluguelController.entregar(locacao)}" value="#{aluguelController.getEntregueLabel(locacao)}" disabled="#{aluguelController.getEntregueState(locacao)}" class="btn btn-warning"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Pago</f:facet>
+                            <h:commandButton action="#{aluguelController.pagar(locacao)}" value="#{aluguelController.getPagoLabel(locacao)}" disabled="#{aluguelController.getPagoState(locacao) || !locacao.entregue}" class="btn btn-success"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Remover</f:facet>
+                            <h:commandButton value="Remover" action="#{aluguelController.remover(locacao)}" class="btn btn-danger"/>
+                        </h:column>
+                    </h:dataTable>
+            </div>
+            </div>
+
+            <div class="panel panel-info">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Histórico</h3>
+		  </div>
+		  <div class="panel-body">
+                <h:dataTable id="tabelaHistorico" value="#{aluguelController.historico}" var="locacao" class="table table-hover">
+                    <h:column>
+                        <f:facet name="header">Tipo</f:facet>
+                        <h:outputText value="#{locacao.ferramenta.tipo.nome}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Codigo</f:facet>
+                        <h:outputText value="#{locacao.ferramenta.codigo}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Valor diário</f:facet>
+                        <h:outputText value="#{locacao.ferramenta.precoAluguel}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Locação</f:facet>
+                        <h:outputText value="#{locacao.dataLocacao.time}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"/>
+                        </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Prazo</f:facet>
+                        <h:outputText value="#{locacao.prazoDevolucao.time}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"/>
+                        </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Devolução</f:facet>
+                        <h:outputText value="#{locacao.dataDevolucao.time}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"/>
+                        </h:outputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Acréscimo</f:facet>
+                        <h:outputText value="#{aluguelController.getAcrescimo(locacao)}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Desconto</f:facet>
+                        <h:outputText value="#{aluguelController.getDesconto(locacao)}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Valor total</f:facet>
+                        <h:outputText value="#{aluguelController.getValorTotal(locacao)}"/>
+                    </h:column>
+                </h:dataTable>
+            </div>
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+</html>
